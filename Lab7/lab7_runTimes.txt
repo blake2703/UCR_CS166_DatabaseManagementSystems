@@ -1,0 +1,18 @@
+
+Average query time without indexes:
+Query1: 21.2095 ms
+Query 2: 19.817666666667 ms
+Query 3: 75.567 ms
+Query 4: 45.533666666667 ms
+Query 5: 147.177 ms
+Query 6: 27.680666666667 ms
+
+Average query time with indexes:
+Query1: 22.973666666667 ms
+Query2: 17.209666666667 ms
+Query3: 72.698333333333 ms
+Query4: 43.03 ms
+Query5: 185.70233333333 ms
+Query6: 52.252333333333 ms
+
+This is important because it shows us how indexing can help when we have mass amounts of data. As shown we acheived faster runtime with the indexing in most, but not all scenarios.

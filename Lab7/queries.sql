@@ -1,0 +1,64 @@
+--Count how many parts in NYC have more than 70 parts on hand
+SELECT COUNT(*) AS total_parts_NYC
+FROM PART_NYC AS PNYC
+WHERE PNYC.ON_HAND > 70;
+
+
+--Count how many total parts on hand, in both NYC and SFO, are Red
+SELECT SUM
+(
+	(SELECT SUM(PNYC.ON_HAND)
+	FROM PART_NYC AS PNYC, COLOR AS C 
+	WHERE PNYC.COLOR = C.COLOR_ID AND C.COLOR_NAME = 'Red')
+	+
+	(SELECT SUM(PSFO.ON_HAND)
+	FROM PART_SFO AS PSFO, COLOR AS C2
+	WHERE PSFO.COLOR = C2.COLOR_ID AND C2.COLOR_NAME = 'Red')
+) AS total_red_parts_nyc_sfo;
+
+
+
+--List all the suppliers that have more total on hand parts in NYC than they do in SFO.
+SELECT S.SUPPLIER_NAME
+FROM SUPPLIER AS S
+WHERE
+(
+	SELECT SUM(PNYC.ON_HAND)
+	FROM PART_NYC AS PNYC
+	WHERE S.SUPPLIER_ID = PNYC.SUPPLIER
+)
+>
+(
+	SELECT SUM(PSFO.ON_HAND)
+	FROM PART_SFO AS PSFO
+	WHERE S.SUPPLIER_ID = PSFO.SUPPLIER
+);
+
+
+--List all suppliers that supply parts in NYC that aren’t supplied by anyone in SFO.
+
+SELECT DISTINCT S.SUPPLIER_NAME 
+FROM SUPPLIER AS S, PART_NYC AS PNYC 
+WHERE PNYC.PART_NUMBER IN
+	(
+		SELECT PNYC2.PART_NUMBER 
+		FROM SUPPLIER AS S2, PART_NYC AS PNYC2 
+		WHERE S2.SUPPLIER_ID = PNYC2.SUPPLIER 
+		EXCEPT 
+		SELECT PSFO.PART_NUMBER 
+		FROM SUPPLIER AS S3, PART_SFO AS PSFO 
+		WHERE S3.SUPPLIER_ID = PSFO.SUPPLIER 
+	) AND S.SUPPLIER_ID = PNYC.SUPPLIER; 
+
+
+
+--Update all of the NYC on hand values to on hand - 10.
+UPDATE PART_NYC 
+SET ON_HAND = ON_HAND - 10;
+
+
+--Delete all parts from NYC which have less than 30 parts on hand.
+DELETE FROM PART_NYC 
+WHERE ON_HAND < 30;
+
+
