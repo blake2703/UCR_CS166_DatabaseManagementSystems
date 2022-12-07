@@ -1,3 +1,6 @@
 [submodule "CS166Lab6"]
 	path = CS166Lab6
 	url = https://github.com/blake2703/CS166Lab6.git
+[submodule "CS166_Final_Project"]
+	path = CS166_Final_Project
+	url = https://github.com/blake2703/CS166_Final_Project.git
